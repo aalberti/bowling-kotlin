@@ -33,4 +33,15 @@ class BowlingTest : StringSpec({
                 "0") shouldBe 10
     }
 
+    "spare is 10 for the frame" {
+        Bowling.score(
+                "2", "/",
+                "0") shouldBe 10
+    }
+
+    "spare is 10 + next try" {
+        Bowling.score(
+                "0", "/",
+                "1") shouldBe 12
+    }
 })
