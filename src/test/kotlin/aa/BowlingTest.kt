@@ -54,4 +54,11 @@ class BowlingTest : StringSpec({
                 "0", "0"
         ) shouldBe 10
     }
+
+    "strike is 10 + next 2 tries" {
+        score(
+                "X",
+                "1", "1"
+        ) shouldBe 14
+    }
 })
