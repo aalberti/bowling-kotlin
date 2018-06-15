@@ -61,4 +61,30 @@ class BowlingTest : StringSpec({
                 "1", "1"
         ) shouldBe 14
     }
+
+    "- == 0 for the 1st try" {
+        score(
+                "-", "0"
+        ) shouldBe 0
+    }
+
+    "- == 0 for the 2nd try" {
+        score(
+                "0", "-"
+        ) shouldBe 0
+    }
+
+    "spare understands -" {
+        score(
+                "0", "/",
+                "-"
+        ) shouldBe 10
+    }
+
+    "strike understands -" {
+        score(
+                "X",
+                "-", "-"
+        ) shouldBe 10
+    }
 })

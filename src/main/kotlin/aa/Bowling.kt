@@ -10,16 +10,19 @@ fun score(vararg tries: String): Int = tries.asIterable()
 class Frame(private val tries: List<String>) {
 
     fun score(): Int = when {
-        tries.size == 1 -> firstScore()
-        isStrike() -> 10 + nextFirstScore() + nextSecondScore()
-        isSpare() -> 10 + nextFirstScore()
-        else -> firstScore() + secondScore()
+        tries.size == 1 -> first().score()
+        isStrike() -> 10 + nextFirst().score() + nextSecond().score()
+        isSpare() -> 10 + nextFirst().score()
+        else -> first().score() + second().score()
     }
 
-    private fun isSpare() = tries[1] == "/"
-    private fun isStrike() = tries[0] == "X"
-    private fun firstScore(): Int = tries[0].toInt()
-    private fun secondScore(): Int = tries[1].toInt()
-    private fun nextFirstScore(): Int = tries[2].toInt()
-    private fun nextSecondScore(): Int = tries[3].toInt()
+    private fun isSpare() = second() == "/"
+    private fun isStrike() = first() == "X"
+
+    private fun first() = tries[0]
+    private fun second() = tries[1]
+    private fun nextFirst() = tries[2]
+    private fun nextSecond() = tries[3]
+
+    private fun String.score() = if (this == "-") 0 else toInt()
 }
