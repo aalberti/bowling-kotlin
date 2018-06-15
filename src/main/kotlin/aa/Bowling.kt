@@ -1,8 +1,5 @@
 package aa
 
-class Bowling {
-    fun score(): Int {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
+object Bowling {
+    fun score(vararg shots: String?): Int = shots.firstOrNull()?.toInt() ?: 0
 }
