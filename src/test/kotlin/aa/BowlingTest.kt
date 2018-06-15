@@ -11,5 +11,19 @@ class BowlingTest : StringSpec({
     "count 1st try" {
         Bowling.score("1") shouldBe 1
     }
-})
 
+    "count all tries" {
+        Bowling.score(
+                "1", "1",
+                "1", "1",
+                "1", "1",
+                "1", "1",
+                "1", "1",
+                "1", "1",
+                "1", "1",
+                "1", "1",
+                "1", "1",
+                "1", "1"
+                ) shouldBe 20
+    }
+})
