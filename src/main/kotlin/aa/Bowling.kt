@@ -1,5 +1,5 @@
 package aa
 
 object Bowling {
-    fun score(vararg shots: String?): Int = shots.firstOrNull()?.toInt() ?: 0
+    fun score(vararg tries: String?): Int = tries.firstOrNull()?.toInt() ?: 0
 }

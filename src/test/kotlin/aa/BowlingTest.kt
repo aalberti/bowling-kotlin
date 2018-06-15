@@ -8,7 +8,7 @@ class BowlingTest : StringSpec({
         Bowling.score() shouldBe 0
     }
 
-    "count 1st shot" {
+    "count 1st try" {
         Bowling.score("1") shouldBe 1
     }
 })
