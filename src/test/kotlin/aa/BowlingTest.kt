@@ -13,18 +13,7 @@ class BowlingTest : StringSpec({
     }
 
     "count all tries" {
-        score(
-                "1", "1",
-                "1", "1",
-                "1", "1",
-                "1", "1",
-                "1", "1",
-                "1", "1",
-                "1", "1",
-                "1", "1",
-                "1", "1",
-                "1", "1"
-        ) shouldBe 20
+        score(*20 times "1") shouldBe 20
     }
 
     "spare is 10" {
@@ -87,4 +76,18 @@ class BowlingTest : StringSpec({
                 "-", "-"
         ) shouldBe 10
     }
+
+    "strike after spare" {
+        score(
+                "0", "/",
+                "X",
+                "-", "-"
+        ) shouldBe 30
+    }
+
+    "strikes don't count as strikes after 10th frame" {
+        score(*12 times "X") shouldBe 300
+    }.config(enabled = false)
 })
+
+infix fun Int.times(item:String) = Array(this) {item}
