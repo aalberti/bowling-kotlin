@@ -85,6 +85,14 @@ class BowlingTest : StringSpec({
         ) shouldBe 30
     }
 
+    "spare after strike" {
+        score(
+                "X",
+                "0", "/",
+                "-", "-"
+        ) shouldBe 30
+    }
+
     "strikes don't count as strikes after 10th frame" {
         score(*12 times "X") shouldBe 300
     }.config(enabled = false)

@@ -27,6 +27,7 @@ class Frame(private val tries: List<String>) {
     private fun String.score() = when {
         this == "-" -> 0
         this == "X" -> 10
+        this == "/" -> 10
         else -> toInt()
     }
 }
