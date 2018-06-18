@@ -6,9 +6,22 @@ fun List<String>.toFrames(): Frames? = this.toFrames(null)
 
 fun List<String>.toFrames(frames: Frames?): Frames? = when {
     isEmpty() -> frames
-    last() == "X" -> dropLast(1).toFrames(Strike(frames))
-    last() == "/" -> dropLast(2).toFrames(Spare(dropLast(1).last().score(), frames))
-    else -> dropLast(2).toFrames(Incomplete(dropLast(1).last().score(), last().score(), frames))
+    last() == "X" -> dropLast(1).toFrames(
+            Strike(next = frames)
+    )
+    last() == "/" -> dropLast(2).toFrames(
+            Spare(
+                    first = dropLast(1).last().score(),
+                    next = frames
+            )
+    )
+    else -> dropLast(2).toFrames(
+            Incomplete(
+                    first = dropLast(1).last().score(),
+                    second = last().score(),
+                    next = frames
+            )
+    )
 }
 
 fun String.score(): Int = if (this == "-") 0 else toInt()
