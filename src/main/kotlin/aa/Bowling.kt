@@ -13,23 +13,24 @@ fun List<String>.toFrames(frames: Frames?): Frames? = when {
 
 fun String.score(): Int = if (this == "-") 0 else toInt()
 
-sealed class Frames(open val first: Int) {
+sealed class Frames(open val first: Int, open val next: Frames?) {
+    fun score(): Int = frameScore() + (next?.score() ?: 0)
+    abstract fun frameScore(): Int
     abstract operator fun plus(next: Frames): Frames
-    abstract fun score(): Int
     abstract val two: Int
 }
-data class Strike(val next: Frames? = null): Frames(10) {
+data class Strike(override val next: Frames? = null): Frames(10, next) {
     override val two: Int = 10 + (next?.first ?: 0)
-    override fun score(): Int = 10 + (next?.two ?: 0) + (next?.score() ?: 0)
+    override fun frameScore(): Int = 10 + (next?.two ?: 0)
     override operator fun plus(next: Frames): Frames = Strike(next)
 }
-data class Spare(override val first: Int, val next: Frames? = null): Frames(first) {
+data class Spare(override val first: Int, override val next: Frames? = null): Frames(first, next) {
     override val two: Int = 10
-    override fun score(): Int = 10 + (next?.first ?: 0) + (next?.score() ?: 0)
+    override fun frameScore(): Int = 10 + (next?.first ?: 0)
     override operator fun plus(next: Frames): Frames = Spare(first, next)
 }
-data class Incomplete(override val first: Int, val second: Int, val next: Frames? = null): Frames(first) {
-    override fun score(): Int = first + second + (next?.score() ?: 0)
+data class Incomplete(override val first: Int, val second: Int, override val next: Frames? = null): Frames(first, next) {
+    override fun frameScore(): Int = first + second
     override val two: Int = first + second
     override operator fun plus(next: Frames): Frames = Incomplete(first, second, next)
 }
