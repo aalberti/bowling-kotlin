@@ -1,36 +1,35 @@
 package aa
 
-const val strikePadding = "?"
+fun score(vararg tries: String): Int = tries.toList().toFrames()?.score() ?: 0
 
-fun score(vararg tries: String): Int = tries.asIterable()
-        .flatMap { if (it == "X") listOf("X", strikePadding) else listOf(it) }
-        .windowed(size = 5, step = 2, partialWindows = true)
-        .map { Frame(it) }
-        .map { it.score() }
-        .sum()
+fun List<String>.toFrames(): Frames? = this.toFrames(null)
 
-class Frame(private val tries: List<String>) {
+fun List<String>.toFrames(frames: Frames?): Frames? = when {
+    isEmpty() -> frames
+    last() == "X" -> dropLast(1).toFrames(Strike(frames))
+    last() == "/" -> dropLast(2).toFrames(Spare(dropLast(1).last().score(), frames))
+    else -> dropLast(2).toFrames(Incomplete(dropLast(1).last().score(), last().score(), frames))
+}
 
-    fun score(): Int = when {
-        tries.size == 1 -> first.score()
-        isStrike() -> 10 + nextTwoCounts()
-        isSpare() -> 10 + nextFirst.score()
-        else -> first.score() + second.score()
-    }
+fun String.score(): Int = if (this == "-") 0 else toInt()
 
-    private fun nextTwoCounts() = if (nextSecond == "/") 10 else nextFirst.score() + nextSecond.score()
-    private fun isSpare() = second == "/"
-    private fun isStrike() = first == "X"
-
-    private val first get() = tries[0]
-    private val second get() = tries[1]
-    private val nextFirst get() = tries[2]
-    private val nextSecond get() = if (tries[3] == strikePadding) tries[4] else tries[3]
-
-    private fun String.score() = when {
-        this == "-" -> 0
-        this == "X" -> 10
-        this == "/" -> 10
-        else -> toInt()
-    }
+sealed class Frames(open val first: Int) {
+    abstract operator fun plus(next: Frames): Frames
+    abstract fun score(): Int
+    abstract val two: Int
+}
+data class Strike(val next: Frames? = null): Frames(10) {
+    override val two: Int = 10 + (next?.first ?: 0)
+    override fun score(): Int = 10 + (next?.two ?: 0) + (next?.score() ?: 0)
+    override operator fun plus(next: Frames): Frames = Strike(next)
+}
+data class Spare(override val first: Int, val next: Frames? = null): Frames(first) {
+    override val two: Int = 10
+    override fun score(): Int = 10 + (next?.first ?: 0) + (next?.score() ?: 0)
+    override operator fun plus(next: Frames): Frames = Spare(first, next)
+}
+data class Incomplete(override val first: Int, val second: Int, val next: Frames? = null): Frames(first) {
+    override fun score(): Int = first + second + (next?.score() ?: 0)
+    override val two: Int = first + second
+    override operator fun plus(next: Frames): Frames = Incomplete(first, second, next)
 }

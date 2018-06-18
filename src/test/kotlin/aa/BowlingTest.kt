@@ -9,7 +9,7 @@ class BowlingTest : StringSpec({
     }
 
     "count 1st try" {
-        score("1") shouldBe 1
+        score("1", "0") shouldBe 1
     }
 
     "count all tries" {
@@ -19,21 +19,21 @@ class BowlingTest : StringSpec({
     "spare is 10" {
         score(
                 "0", "/",
-                "0"
+                "0", "0"
         ) shouldBe 10
     }
 
     "spare is 10 for the whole frame" {
         score(
                 "2", "/",
-                "0"
+                "0", "0"
         ) shouldBe 10
     }
 
     "spare is 10 + next try" {
         score(
                 "0", "/",
-                "1"
+                "1", "0"
         ) shouldBe 12
     }
 
@@ -66,7 +66,7 @@ class BowlingTest : StringSpec({
     "spare understands -" {
         score(
                 "0", "/",
-                "-"
+                "-", "-"
         ) shouldBe 10
     }
 
@@ -107,6 +107,14 @@ class BowlingTest : StringSpec({
                 "X",
                 "-", "-"
         ) shouldBe 30
+    }
+
+    "3 strikes in a row" {
+        score(
+                "X",
+                "X",
+                "X"
+        ) shouldBe 60
     }
 
     "strikes don't count as strikes after 10th frame" {
