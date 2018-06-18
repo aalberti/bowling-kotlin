@@ -121,6 +121,14 @@ class BowlingTest : StringSpec({
     "strikes don't count as strikes after 10th frame" {
         score(*12 times "X") shouldBe 300
     }
+
+    "11th frame for spare" {
+        score(
+                *18 times "-",
+                "-", "/",
+                "X"
+        ) shouldBe 20
+    }
 })
 
 infix fun Int.times(item:String) = Array(this) {item}
