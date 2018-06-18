@@ -13,11 +13,12 @@ class Frame(private val tries: List<String>) {
 
     fun score(): Int = when {
         tries.size == 1 -> first.score()
-        isStrike() -> 10 + nextFirst.score() + nextSecond.score()
+        isStrike() -> 10 + nextTwoCounts()
         isSpare() -> 10 + nextFirst.score()
         else -> first.score() + second.score()
     }
 
+    private fun nextTwoCounts() = if (nextSecond == "/") 10 else nextFirst.score() + nextSecond.score()
     private fun isSpare() = second == "/"
     private fun isStrike() = first == "X"
 

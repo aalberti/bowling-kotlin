@@ -85,10 +85,18 @@ class BowlingTest : StringSpec({
         ) shouldBe 30
     }
 
-    "spare after strike" {
+    "spare after missed after strike" {
         score(
                 "X",
-                "0", "/",
+                "-", "/",
+                "-", "-"
+        ) shouldBe 30
+    }
+
+    "spare after incomplete after strike" {
+        score(
+                "X",
+                "2", "/",
                 "-", "-"
         ) shouldBe 30
     }
