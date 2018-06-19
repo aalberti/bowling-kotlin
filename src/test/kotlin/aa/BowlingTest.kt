@@ -13,5 +13,8 @@ class BowlingTest : StringSpec({
     "count many" {
         Bowling().score("9", "0") shouldBe 9
     }
+    "count 2nd try" {
+        Bowling().score("0", "9") shouldBe 9
+    }
 })
 
