@@ -1,5 +1,5 @@
 package aa
 
 class Bowling {
-    fun score(): Int = 0
+    fun score(vararg tries: String): Int = 0
 }
