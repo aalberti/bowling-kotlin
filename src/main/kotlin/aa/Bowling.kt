@@ -1,20 +1,33 @@
 package aa
 
-import kotlin.collections.windowed
-
-fun score(vararg tries: String): Int = tries.toList()
-        .windowed(size = 3, partialWindows = true)
-        .map { it.tryScore() }
-        .sum()
-
-private fun List<String>.tryScore(): Int = when {
-    size > 1 && this[1] == "/" -> 0
-    this[0] == "/" -> if (size >= 2) this[0].value() + this[1].value() else 0
-    this[0] == "X" -> if (size >= 3) this[0].value() + drop(1).value() else 0
-    else -> this[0].value()
+fun score(vararg tries: String): Int {
+    return tries.toList()
+            .toFrames()
+            .map { it.score() }
+            .sum()
 }
 
-private fun List<String>.value() = if (this[1] == "/") 10 else this[0].value() + this[1].value()
+fun List<String>.toFrames(): List<Frame> = when {
+    isEmpty() -> emptyList()
+    this[0] == "X" -> listOf(Frame(this)) + drop(1).toFrames()
+    else -> listOf(Frame(this)) + drop(2).toFrames()
+}
+
+data class Frame(val first: String, val second: String?, val third: String? = null) {
+    constructor(tries: List<String>) : this(
+            tries[0],
+            if (tries.size > 1) tries[1] else null,
+            if (tries.size > 2) tries[2] else null
+    )
+
+    fun score(): Int = when {
+        first == "X" -> if (third == null) 0 else first.value() + nextTwo()
+        second == "/" -> if (third == null) 0 else 10 + third.value()
+        else -> first.value() + second?.value()!!
+    }
+
+    private fun nextTwo() = if (third == "/") 10 else second?.value()!! + third?.value()!!
+}
 
 private fun String.value() = when (this) {
     "-" -> 0
