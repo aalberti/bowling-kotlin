@@ -1,8 +1,13 @@
 package aa
 
-fun score(vararg tries: String): Int = tries.map { it.toScore() }.sum()
+import kotlin.collections.windowed
 
-private fun String.toScore() = when {
-    this == "/" -> 10
-    else -> toInt()
+fun score(vararg tries: String): Int = tries.toList()
+        .windowed(size = 2, partialWindows = true)
+        .map { it.toScore() }
+        .sum()
+
+private fun List<String>.toScore() = when {
+    this[0] == "/" -> 10 + this[1].toInt()
+    else -> this[0].toInt()
 }

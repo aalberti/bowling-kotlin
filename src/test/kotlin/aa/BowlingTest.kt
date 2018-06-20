@@ -25,6 +25,12 @@ class BowlingTest : StringSpec({
                 "0", "0"
         ) shouldBe 10
     }
+    "spare counts next incomplete try" {
+        score(
+                "0", "/",
+                "1", "0"
+        ) shouldBe 12
+    }
 })
 
 infix fun Int.times(item:String):Array<String> = Array(this) {item}
