@@ -40,6 +40,12 @@ class BowlingTest : StringSpec({
                 "-", "-"
         ) shouldBe 10
     }
+    "incomplete before spare doesn't count" {
+        score(
+                "1", "/",
+                "-", "-"
+        ) shouldBe 10
+    }
     "strike followed by 2 misses is 10" {
         score(
                 "X",
@@ -51,6 +57,58 @@ class BowlingTest : StringSpec({
                 "X",
                 "1", "1"
         ) shouldBe 14
+    }
+    "strike after spare" {
+        score(
+                "0", "/",
+                "X",
+                "-", "-"
+        ) shouldBe 30
+    }
+
+    "spare after missed after strike" {
+        score(
+                "X",
+                "-", "/",
+                "-", "-"
+        ) shouldBe 30
+    }
+
+    "spare after incomplete after strike" {
+        score(
+                "X",
+                "2", "/",
+                "-", "-"
+        ) shouldBe 30
+    }
+
+    "strike after strike" {
+        score(
+                "X",
+                "X",
+                "-", "-"
+        ) shouldBe 30
+    }
+
+    "3 strikes in a row" {
+        score(
+                "X",
+                "X",
+                "X",
+                "-", "-"
+        ) shouldBe 60
+    }
+
+    "strikes don't count as strikes after 10th frame" {
+        score(*12 times "X") shouldBe 300
+    }
+
+    "11th frame for spare" {
+        score(
+                *18 times "-",
+                "-", "/",
+                "X"
+        ) shouldBe 20
     }
 })
 
