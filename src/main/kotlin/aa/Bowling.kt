@@ -3,48 +3,49 @@ package aa
 fun score(vararg tries: String): Int {
     return tries.toList()
             .toFrames()
-            .map { it.score() }
-            .sum()
+            ?.score() ?: 0
 }
 
-fun List<String>.toFrames(): List<Frame> = when {
-    isEmpty() -> emptyList()
-    this[0] == "X" -> listOf(Frame.of(this)) + drop(1).toFrames()
-    else -> listOf(Frame.of(this)) + drop(2).toFrames()
-}
-
-sealed class Frame {
-    companion object {
-        fun of(tries: List<String>): Frame = when {
-            tries[0] == "X" -> Strike(
-                    if (tries.size > 1) tries[1] else null,
-                    if (tries.size > 2) tries[2] else null
+fun List<String>.toFrames(): Frame? {
+    return if (isEmpty())
+        null
+    else {
+        val frameSize = if (this[0] == "X") 1 else 2
+        val next = drop(frameSize).toFrames()
+        when {
+            this[0] == "X" -> Strike(
+                    if (this.size > 1) this[1] else null,
+                    if (this.size > 2) this[2] else null,
+                    next
             )
-            tries[1] == "/" -> Spare(
-                    if (tries.size > 2) tries[2] else null
+            this[1] == "/" -> Spare(
+                    this[0],
+                    next
             )
             else -> Incomplete(
-                    tries[0],
-                    if (tries.size > 1) tries[1] else null,
-                    if (tries.size > 2) tries[2] else null
+                    this[0],
+                    if (this.size > 1) this[1] else null,
+                    if (this.size > 2) this[2] else null,
+                    next
             )
         }
     }
-
-    abstract fun score(): Int
 }
 
-data class Strike(val nextFirst: String?, val nextSecond: String?) : Frame() {
-    override fun score(): Int = if (nextSecond == null) 0 else 10 + nextTwo()
+//TODO pull nextTwo up
+sealed class Frame(open val first: String, open val next: Frame?) {
+    fun score():Int = frameScore() + (next?.score() ?: 0)
+    abstract fun frameScore(): Int
+}
+data class Strike(val nextFirst: String?, val nextSecond: String?, override val next: Frame?) : Frame("10", next) {
+    override fun frameScore(): Int = if (next == null) 0 else 10 + nextTwo()
     private fun nextTwo() = if (nextSecond == "/") 10 else nextFirst?.value()!! + nextSecond?.value()!!
 }
-
-data class Spare(val next: String?) : Frame() {
-    override fun score(): Int = if (next == null) 0 else 10 + next.value()
+data class Spare(override val first: String, override val next: Frame?) : Frame(first, next) {
+    override fun frameScore(): Int = if (next == null) 0 else 10 + next.first.value()
 }
-
-data class Incomplete(val first: String, val second: String?, val third: String? = null) : Frame() {
-    override fun score(): Int = when (second) {
+data class Incomplete(override val first: String, val second: String?, val third: String? = null, override val next: Frame?) : Frame(first, next) {
+    override fun frameScore(): Int = when (second) {
         "/" -> if (third == null) 0 else 10 + third.value()
         else -> first.value() + second?.value()!!
     }
