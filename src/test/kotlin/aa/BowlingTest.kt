@@ -40,6 +40,12 @@ class BowlingTest : StringSpec({
                 "-", "-"
         ) shouldBe 10
     }
+    "strike followed by 2 misses is 10" {
+        score(
+                "X",
+                "-", "-"
+        ) shouldBe 10
+    }
 })
 
 infix fun Int.times(item:String):Array<String> = Array(this) {item}
