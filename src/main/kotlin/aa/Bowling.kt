@@ -9,24 +9,45 @@ fun score(vararg tries: String): Int {
 
 fun List<String>.toFrames(): List<Frame> = when {
     isEmpty() -> emptyList()
-    this[0] == "X" -> listOf(Frame(this)) + drop(1).toFrames()
-    else -> listOf(Frame(this)) + drop(2).toFrames()
+    this[0] == "X" -> listOf(Frame.of(this)) + drop(1).toFrames()
+    else -> listOf(Frame.of(this)) + drop(2).toFrames()
 }
 
-data class Frame(val first: String, val second: String?, val third: String? = null) {
-    constructor(tries: List<String>) : this(
-            tries[0],
-            if (tries.size > 1) tries[1] else null,
-            if (tries.size > 2) tries[2] else null
-    )
-
-    fun score(): Int = when {
-        first == "X" -> if (third == null) 0 else first.value() + nextTwo()
-        second == "/" -> if (third == null) 0 else 10 + third.value()
-        else -> first.value() + second?.value()!!
+sealed class Frame {
+    companion object {
+        fun of(tries: List<String>): Frame = when {
+            tries[0] == "X" -> Strike(
+                    if (tries.size > 1) tries[1] else null,
+                    if (tries.size > 2) tries[2] else null
+            )
+            tries[1] == "/" -> Spare(
+                    if (tries.size > 2) tries[2] else null
+            )
+            else -> Incomplete(
+                    tries[0],
+                    if (tries.size > 1) tries[1] else null,
+                    if (tries.size > 2) tries[2] else null
+            )
+        }
     }
 
-    private fun nextTwo() = if (third == "/") 10 else second?.value()!! + third?.value()!!
+    abstract fun score(): Int
+}
+
+data class Strike(val nextFirst: String?, val nextSecond: String?) : Frame() {
+    override fun score(): Int = if (nextSecond == null) 0 else 10 + nextTwo()
+    private fun nextTwo() = if (nextSecond == "/") 10 else nextFirst?.value()!! + nextSecond?.value()!!
+}
+
+data class Spare(val next: String?) : Frame() {
+    override fun score(): Int = if (next == null) 0 else 10 + next.value()
+}
+
+data class Incomplete(val first: String, val second: String?, val third: String? = null) : Frame() {
+    override fun score(): Int = when (second) {
+        "/" -> if (third == null) 0 else 10 + third.value()
+        else -> first.value() + second?.value()!!
+    }
 }
 
 private fun String.value() = when (this) {
