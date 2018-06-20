@@ -5,7 +5,6 @@ import io.kotlintest.specs.StringSpec
 
 class BowlingTest : StringSpec({
     "compile" {
-        Bowling().score() shouldBe 0
+        score() shouldBe 0
     }
 })
-
