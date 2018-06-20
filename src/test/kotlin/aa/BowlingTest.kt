@@ -19,6 +19,12 @@ class BowlingTest : StringSpec({
     "count many tries" {
         score(*20 times "1") shouldBe 20
     }
+    "spare before miss" {
+        score(
+                "0", "/",
+                "0", "0"
+        ) shouldBe 10
+    }
 })
 
 infix fun Int.times(item:String):Array<String> = Array(this) {item}
