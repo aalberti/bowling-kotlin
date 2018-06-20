@@ -31,6 +31,15 @@ class BowlingTest : StringSpec({
                 "1", "0"
         ) shouldBe 12
     }
+    "support '-' in independent tries" {
+        score("-", "-") shouldBe 0
+    }
+    "support '-' after spare" {
+        score(
+                "-", "/",
+                "-", "-"
+        ) shouldBe 10
+    }
 })
 
 infix fun Int.times(item:String):Array<String> = Array(this) {item}

@@ -13,6 +13,7 @@ private fun List<String>.tryScore() = when {
 }
 
 private fun String.value() = when(this) {
+    "-" -> 0
     "/" -> 10
     else -> this.toInt()
 }
