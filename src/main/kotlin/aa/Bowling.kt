@@ -32,23 +32,19 @@ fun List<String>.toFrames(): Frames? {
 sealed class Frames(open val first: Int, open val next: Frames?) {
     fun score():Int = frameScore() + (next?.score() ?: 0)
     abstract fun frameScore(): Int
-    abstract fun firstTwo(): Int?
+    abstract val firstTwo: Int?
 }
 data class Strike(override val next: Frames?) : Frames(10, next) {
-    override fun frameScore(): Int = if (next?.firstTwo() == null) 0 else 10 + (next.firstTwo() ?: 0)
-    override fun firstTwo(): Int? = if (next == null) null else 10 + next.first
+    override fun frameScore(): Int = if (next?.firstTwo == null) 0 else 10 + (next.firstTwo ?: 0)
+    override val firstTwo: Int? = if (next == null) null else 10 + next.first
 }
 data class Spare(override val first: Int, override val next: Frames?) : Frames(first, next) {
     override fun frameScore(): Int = if (next == null) 0 else 10 + next.first
-    override fun firstTwo(): Int = 10
+    override val firstTwo: Int = 10
 }
 data class Incomplete(override val first: Int, val second: Int, override val next: Frames?) : Frames(first, next) {
     override fun frameScore(): Int = first + second
-    override fun firstTwo(): Int = first + second
+    override val firstTwo: Int = first + second
 }
 
-private fun String.value() = when (this) {
-    "-" -> 0
-    "/", "X" -> 10
-    else -> this.toInt()
-}
+private fun String.value() = if (this == "-") 0 else this.toInt()
