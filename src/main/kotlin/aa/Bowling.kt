@@ -2,17 +2,16 @@ package aa
 
 fun score(vararg tries: String): Int = tries.toList()
         .toFrames()
-        .map { it.score() }
-        .sum()
+        .overallScore()
 
-private fun List<String>.toFrames(): List<Frame> = toFrames(null)
+private fun List<String>.toFrames(): Frame = toFrames(null)!!
 
-private fun List<String>.toFrames(nextFrame: Frame?): List<Frame> = when (size) {
-    0 -> emptyList()
+private fun List<String>.toFrames(nextFrame: Frame?): Frame? = when (size) {
+    0 -> nextFrame
     else -> {
         val lastFrame = takeLast(2).toFrame(nextFrame)
-        val rest = dropLast(2)
-        rest.toFrames(lastFrame) + lastFrame
+        val head = dropLast(2)
+        head.toFrames(lastFrame)
     }
 }
 
@@ -23,20 +22,22 @@ private fun List<String>.toFrame(nextFrame: Frame?): Frame = when {
     )
     else -> Incomplete(
             this[0],
-            this[1]
+            this[1],
+            nextFrame
     )
 }
 
-sealed class Frame(open val first: String) {
-    abstract fun score(): Int
+sealed class Frame(open val first: String, open val next: Frame?) {
+    abstract fun frameValue(): Int
+    fun overallScore(): Int = frameValue() + (next?.overallScore() ?: 0)
 }
 
-data class Spare(override val first: String, val nextFrame: Frame?) : Frame(first) {
-    override fun score(): Int = 10 + (nextFrame?.first?.toInt() ?: 0)
+data class Spare(override val first: String, override val next: Frame?) : Frame(first, next) {
+    override fun frameValue(): Int = 10 + (next?.first?.toInt() ?: 0)
 }
 
-data class Incomplete(override val first: String, val second: String) : Frame(first) {
-    override fun score(): Int {
+data class Incomplete(override val first: String, val second: String, override val next: Frame?) : Frame(first, next) {
+    override fun frameValue(): Int {
         return first.toInt() + second.toInt()
     }
 }
