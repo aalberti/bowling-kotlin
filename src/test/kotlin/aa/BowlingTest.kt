@@ -33,4 +33,11 @@ class BowlingTest : StringSpec({
                 "0", "0"
         ) shouldBe 10
     }
+
+    "ignore 1st try of a spare" {
+        score(
+                "9", "/",
+                "0", "0"
+        ) shouldBe 10
+    }
 })
