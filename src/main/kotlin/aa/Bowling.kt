@@ -1,5 +1,3 @@
 package aa
 
-fun score(): Int {
-    TODO("not implemented")
-}
+fun score(vararg tries: String): Int = 0

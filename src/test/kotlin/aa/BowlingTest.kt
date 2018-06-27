@@ -4,7 +4,7 @@ import io.kotlintest.matchers.shouldBe
 import io.kotlintest.specs.StringSpec
 
 class BowlingTest : StringSpec({
-    "compile" {
-        score() shouldBe 0
+    "count 0" {
+        score("0", "0") shouldBe 0
     }
 })
