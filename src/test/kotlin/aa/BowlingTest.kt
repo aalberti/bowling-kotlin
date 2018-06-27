@@ -26,4 +26,11 @@ class BowlingTest : StringSpec({
                 "1", "1"
         ) shouldBe 20
     }
+
+    "count spare as 10" {
+        score(
+                "0", "/",
+                "0", "0"
+        ) shouldBe 10
+    }
 })
