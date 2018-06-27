@@ -40,4 +40,11 @@ class BowlingTest : StringSpec({
                 "0", "0"
         ) shouldBe 10
     }
+
+    "spare adds next try" {
+        score(
+                "0", "/",
+                "1", "0"
+        ) shouldBe 12
+    }
 })
