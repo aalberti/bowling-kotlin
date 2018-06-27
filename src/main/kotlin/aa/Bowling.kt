@@ -2,15 +2,22 @@ package aa
 
 fun score(vararg tries: String): Int = tries.toList()
         .windowed(size = 3, step = 2, partialWindows = true)
-        .map {it.toFrame() }
+        .map { it.toFrame() }
         .map { it.value() }
         .sum()
 
-private fun List<String>.toFrame(): Frame = Frame(this[0], this[1], if (size > 2) this[2] else null)
+private fun List<String>.toFrame(): Frame = if (this[1] == "/") Spare(this[0], this[2]) else Incomplete(this[0], this[1])
 
-data class Frame(val first:String, val second: String, val next: String?)
+sealed class Frame {
+    abstract fun value(): Int
+}
 
-private fun Frame.value(): Int = when {
-    second == "/" -> 10 + (next?.toInt() ?: 0)
-    else -> first.toInt() + second.toInt()
+data class Spare(val first: String, val next: String?) : Frame() {
+    override fun value(): Int = 10 + (next?.toInt() ?: 0)
+}
+
+data class Incomplete(val first: String, val second: String): Frame() {
+    override fun value(): Int {
+        return first.toInt() + second.toInt()
+    }
 }
