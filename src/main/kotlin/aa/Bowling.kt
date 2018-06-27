@@ -1,3 +1,3 @@
 package aa
 
-fun score(vararg tries: String): Int = tries[0].toInt()
+fun score(vararg tries: String): Int = tries.map { it.toInt() }.sum()
