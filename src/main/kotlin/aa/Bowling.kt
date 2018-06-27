@@ -5,21 +5,37 @@ fun score(vararg tries: String): Int = tries.toList()
         .map { it.score() }
         .sum()
 
-private fun List<String>.toFrames(): List<Frame> = this
-        .windowed(size = 3, step = 2, partialWindows = true)
-        .map { it.toFrame() }
+private fun List<String>.toFrames(): List<Frame> = toFrames(null)
 
-private fun List<String>.toFrame(): Frame = if (this[1] == "/") Spare(this[0], this[2]) else Incomplete(this[0], this[1])
+private fun List<String>.toFrames(nextFrame: Frame?): List<Frame> = when (size) {
+    0 -> emptyList()
+    else -> {
+        val lastFrame = takeLast(2).toFrame(nextFrame)
+        val rest = dropLast(2)
+        rest.toFrames(lastFrame) + lastFrame
+    }
+}
 
-sealed class Frame {
+private fun List<String>.toFrame(nextFrame: Frame?): Frame = when {
+    this[1] == "/" -> Spare(
+            this[0],
+            nextFrame
+    )
+    else -> Incomplete(
+            this[0],
+            this[1]
+    )
+}
+
+sealed class Frame(open val first: String) {
     abstract fun score(): Int
 }
 
-data class Spare(val first: String, val next: String?) : Frame() {
-    override fun score(): Int = 10 + (next?.toInt() ?: 0)
+data class Spare(override val first: String, val nextFrame: Frame?) : Frame(first) {
+    override fun score(): Int = 10 + (nextFrame?.first?.toInt() ?: 0)
 }
 
-data class Incomplete(val first: String, val second: String) : Frame() {
+data class Incomplete(override val first: String, val second: String) : Frame(first) {
     override fun score(): Int {
         return first.toInt() + second.toInt()
     }
