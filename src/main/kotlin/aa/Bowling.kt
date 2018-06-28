@@ -16,6 +16,7 @@ private fun List<String>.toFrames(nextFrame: Frame?): Frame? = when (size) {
 }
 
 private fun List<String>.toFrame(nextFrame: Frame?): Frame = when {
+    this[0] == "X" -> Strike(nextFrame)
     this[1] == "/" -> Spare(
             this[0],
             nextFrame
@@ -34,6 +35,10 @@ sealed class Frame(open val first: String, open val next: Frame?) {
 
 data class Spare(override val first: String, override val next: Frame?) : Frame(first, next) {
     override fun frameValue(): Int = 10 + (next?.first?.toInt() ?: 0)
+}
+
+data class Strike(override val next: Frame?) : Frame("10", next) {
+    override fun frameValue(): Int = 10
 }
 
 data class Incomplete(override val first: String, val second: String, override val next: Frame?) : Frame(first, next) {
