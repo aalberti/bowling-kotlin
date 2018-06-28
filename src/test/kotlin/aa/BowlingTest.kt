@@ -75,4 +75,12 @@ class BowlingTest : StringSpec({
                 "0", "0"
         ) shouldBe 30
     }
+
+    "strike adds next spare with incomplete 1st try" {
+        score(
+                "X",
+                "2", "/",
+                "0", "0"
+        ) shouldBe 30
+    }
 })

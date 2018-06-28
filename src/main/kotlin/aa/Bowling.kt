@@ -38,9 +38,9 @@ data class Spare(override val first: Int, override val next: Frame?) : Frame(fir
 }
 
 data class Strike(override val next: Frame?) : Frame(10, next) {
-    override fun frameValue(): Int = 10 + (next?.first ?: 0) + when (next) {
+    override fun frameValue(): Int = 10 + when (next) {
         null -> 0
-        is Incomplete -> next.second
+        is Incomplete -> next.first + next.second
         is Spare -> 10
         else -> 0
     }
