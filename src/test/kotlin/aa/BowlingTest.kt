@@ -120,6 +120,27 @@ class BowlingTest : StringSpec({
                 "0", "0"
         ) shouldBe 10
     }
+
+    "- as spare's next means 0" {
+        score(
+                "0", "/",
+                "-", "0"
+        ) shouldBe 10
+    }
+
+    "- as strike's first next means 0" {
+        score(
+                "X",
+                "-", "0"
+        ) shouldBe 10
+    }
+
+    "- as strike's second next means 0" {
+        score(
+                "X",
+                "0", "-"
+        ) shouldBe 10
+    }
 })
 
 infix fun Int.times(item: String): Array<String> = times(listOf(item))
