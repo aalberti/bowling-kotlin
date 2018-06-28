@@ -98,6 +98,13 @@ class BowlingTest : StringSpec({
                 "1", "/"
         ) shouldBe 20
     }
+
+    "11th strike counts as 10 after spare" {
+        score(*9 times listOf("0", "0"),
+                "0", "/",
+                "X"
+        ) shouldBe 20
+    }
 })
 
 infix fun Int.times(item: String): Array<String> = times(listOf(item))
