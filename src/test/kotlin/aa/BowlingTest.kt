@@ -13,18 +13,7 @@ class BowlingTest : StringSpec({
     }
 
     "count many tries" {
-        score(
-                "1", "1",
-                "1", "1",
-                "1", "1",
-                "1", "1",
-                "1", "1",
-                "1", "1",
-                "1", "1",
-                "1", "1",
-                "1", "1",
-                "1", "1"
-        ) shouldBe 20
+        score(*10 times listOf("1", "1")) shouldBe 20
     }
 
     "count spare as 10" {
@@ -100,35 +89,16 @@ class BowlingTest : StringSpec({
     }
 
     "11th and 12th strikes count as tens" {
-        score(
-                "X",
-                "X",
-                "X",
-                "X",
-                "X",
-                "X",
-                "X",
-                "X",
-                "X",
-                "X",
-                "X",
-                "X"
-        ) shouldBe 300
+        score(*12 times "X") shouldBe 300
     }
 
     "11th spare counts as a ten" {
-        score(
-                "0", "0",
-                "0", "0",
-                "0", "0",
-                "0", "0",
-                "0", "0",
-                "0", "0",
-                "0", "0",
-                "0", "0",
-                "0", "0",
+        score(*9 times listOf("0", "0"),
                 "X",
                 "1", "/"
         ) shouldBe 20
     }
 })
+
+infix fun Int.times(item: String): Array<String> = times(listOf(item))
+infix fun Int.times(frame: List<String>): Array<String> = List(this) { frame }.flatMap { it }.toTypedArray()
