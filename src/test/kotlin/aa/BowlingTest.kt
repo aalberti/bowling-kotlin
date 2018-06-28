@@ -83,4 +83,12 @@ class BowlingTest : StringSpec({
                 "0", "0"
         ) shouldBe 30
     }
+
+    "strike adds next strike" {
+        score(
+                "X",
+                "X",
+                "0", "0"
+        ) shouldBe 30
+    }
 })

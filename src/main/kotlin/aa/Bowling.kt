@@ -9,8 +9,9 @@ private fun List<String>.toFrames(): Frame = toFrames(null)!!
 private fun List<String>.toFrames(nextFrame: Frame?): Frame? = when (size) {
     0 -> nextFrame
     else -> {
-        val lastFrame = takeLast(2).toFrame(nextFrame)
-        val head = dropLast(2)
+        val frameSize = if (last() == "X") 1 else 2
+        val lastFrame = takeLast(frameSize).toFrame(nextFrame)
+        val head = dropLast(frameSize)
         head.toFrames(lastFrame)
     }
 }
@@ -42,7 +43,7 @@ data class Strike(override val next: Frame?) : Frame(10, next) {
         null -> 0
         is Incomplete -> next.first + next.second
         is Spare -> 10
-        else -> 0
+        is Strike -> 10 + (next.next?.first ?: 0)
     }
 }
 
