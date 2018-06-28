@@ -105,6 +105,21 @@ class BowlingTest : StringSpec({
                 "X"
         ) shouldBe 20
     }
+
+    "- as incomplete's first means 0" {
+        score("-", "0") shouldBe 0
+    }
+
+    "- as incomplete's second means 0" {
+        score("0", "-") shouldBe 0
+    }
+
+    "- as spare's first means 0" {
+        score(
+                "-", "/",
+                "0", "0"
+        ) shouldBe 10
+    }
 })
 
 infix fun Int.times(item: String): Array<String> = times(listOf(item))

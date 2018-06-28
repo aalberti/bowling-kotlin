@@ -19,15 +19,17 @@ private fun List<String>.toFrames(nextFrame: Frame?): Frame? = when (size) {
 private fun List<String>.toFrame(nextFrame: Frame?): Frame = when {
     this[0] == "X" -> Strike(nextFrame)
     this[1] == "/" -> Spare(
-            this[0].toInt(),
+            this[0].value(),
             nextFrame
     )
     else -> Incomplete(
-            this[0].toInt(),
-            this[1].toInt(),
+            this[0].value(),
+            this[1].value(),
             nextFrame
     )
 }
+
+private fun String.value() = if (this == "-") 0 else this.toInt()
 
 sealed class Frame(open val first: Int, open val next: Frame?) {
     fun overallScore(): Int = frameValue() + (next?.overallScore() ?: 0)
