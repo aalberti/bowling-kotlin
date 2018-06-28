@@ -99,7 +99,7 @@ class BowlingTest : StringSpec({
         ) shouldBe 30
     }
 
-    "11th and 12th strikes counts as tens" {
+    "11th and 12th strikes count as tens" {
         score(
                 "X",
                 "X",
@@ -114,5 +114,21 @@ class BowlingTest : StringSpec({
                 "X",
                 "X"
         ) shouldBe 300
+    }
+
+    "11th spare counts as a ten" {
+        score(
+                "0", "0",
+                "0", "0",
+                "0", "0",
+                "0", "0",
+                "0", "0",
+                "0", "0",
+                "0", "0",
+                "0", "0",
+                "0", "0",
+                "X",
+                "1", "/"
+        ) shouldBe 20
     }
 })
