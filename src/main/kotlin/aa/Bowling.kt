@@ -32,21 +32,20 @@ private fun List<String>.toFrame(nextFrame: Frame?): Frame = when {
 sealed class Frame(open val first: Int, open val next: Frame?) {
     abstract fun frameValue(): Int
     fun overallScore(): Int = frameValue() + (next?.overallScore() ?: 0)
+    abstract fun firstTwo():Int
 }
 
 data class Spare(override val first: Int, override val next: Frame?) : Frame(first, next) {
-    override fun frameValue(): Int = 10 + (next?.first ?: 0)
+    override fun frameValue(): Int = 10 + (next?.first ?: 42)
+    override fun firstTwo(): Int = 10
 }
 
 data class Strike(override val next: Frame?) : Frame(10, next) {
-    override fun frameValue(): Int = 10 + when (next) {
-        null -> 0
-        is Incomplete -> next.first + next.second
-        is Spare -> 10
-        is Strike -> 10 + (next.next?.first ?: 0)
-    }
+    override fun frameValue(): Int = 10 + (next?.firstTwo() ?: 42)
+    override fun firstTwo(): Int = 10 + (next?.first ?: 42)
 }
 
 data class Incomplete(override val first: Int, val second: Int, override val next: Frame?) : Frame(first, next) {
     override fun frameValue(): Int = first + second
+    override fun firstTwo(): Int = first + second
 }
