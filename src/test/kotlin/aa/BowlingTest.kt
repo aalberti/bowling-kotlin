@@ -46,6 +46,13 @@ class BowlingTest : StringSpec({
                 "1", "0"
         ) shouldBe 12
     }
+    "spare adds next strike" {
+        score(
+                "0", "/",
+                "X",
+                "0", "0"
+        ) shouldBe 30
+    }
 
     "strike is 10" {
         score(
@@ -90,5 +97,22 @@ class BowlingTest : StringSpec({
                 "X",
                 "0", "0"
         ) shouldBe 30
+    }
+
+    "11th and 12th strikes counts as tens" {
+        score(
+                "X",
+                "X",
+                "X",
+                "X",
+                "X",
+                "X",
+                "X",
+                "X",
+                "X",
+                "X",
+                "X",
+                "X"
+        ) shouldBe 300
     }
 })

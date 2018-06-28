@@ -32,7 +32,7 @@ private fun List<String>.toFrame(nextFrame: Frame?): Frame = when {
 sealed class Frame(open val first: Int, open val next: Frame?) {
     abstract fun frameValue(): Int
     fun overallScore(): Int = frameValue() + (next?.overallScore() ?: 0)
-    abstract fun firstTwo():Int
+    abstract fun firstTwo():Int?
 }
 
 data class Spare(override val first: Int, override val next: Frame?) : Frame(first, next) {
@@ -41,8 +41,8 @@ data class Spare(override val first: Int, override val next: Frame?) : Frame(fir
 }
 
 data class Strike(override val next: Frame?) : Frame(10, next) {
-    override fun frameValue(): Int = 10 + (next?.firstTwo() ?: 42)
-    override fun firstTwo(): Int = 10 + (next?.first ?: 42)
+    override fun frameValue(): Int = if (next?.firstTwo() == null) 0 else 10 + next.firstTwo()!!
+    override fun firstTwo(): Int? = if (next == null) null else 10 + next.first
 }
 
 data class Incomplete(override val first: Int, val second: Int, override val next: Frame?) : Frame(first, next) {
