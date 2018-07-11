@@ -16,8 +16,20 @@ class BowlingTest : StringSpec({
     "count 2nd try" {
         score("0", "1") shouldBe 1
     }
-    "count many tries" {
+    "sum up many incomplete tries" {
         score(*20 times "1") shouldBe 20
+    }
+    "spare after gutter is 10" {
+        score(
+                "0", "/",
+                "0", "0"
+        ) shouldBe 10
+    }
+    "spare after incomplete is 10" {
+        score(
+                "9", "/",
+                "0", "0"
+        ) shouldBe 10
     }
 })
 
