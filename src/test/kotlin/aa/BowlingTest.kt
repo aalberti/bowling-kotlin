@@ -49,6 +49,27 @@ class BowlingTest : StringSpec({
                 "1", "1"
         ) shouldBe 14
     }
+    "spare adds next strike" {
+        score(
+                "9", "/",
+                "X",
+                "0", "1"
+        ) shouldBe 32
+    }
+    "strike adds next spare" {
+        score(
+                "X",
+                "9", "/",
+                "1", "0"
+        ) shouldBe 32
+    }
+    "strike adds next strike" {
+        score(
+                "X",
+                "X",
+                "1", "1"
+        ) shouldBe 35
+    }
 })
 
 private infix fun Int.times(item: String): Array<out String> = Array(this) { item }
