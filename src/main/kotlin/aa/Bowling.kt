@@ -1,11 +1,14 @@
 package aa
 
 fun score(vararg tries: String): Int = tries.toList()
-        .windowed(size = 2, step = 2, partialWindows = true)
-        .map { it.toFrame() }
+        .toFrames()
         .map { it.value() }
         .sum()
 
+private fun List<String>.toFrames():List<Frame> = when {
+    isEmpty() -> emptyList()
+    else -> dropLast(2).toFrames() + takeLast(2).toFrame()
+}
 private fun List<String>.toFrame(): Frame = when {
     this[1] == "/" -> Spare(this[0].toInt())
     else -> Incomplete(this[0].toInt(), this[1].toInt())
