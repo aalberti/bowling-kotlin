@@ -16,4 +16,9 @@ class BowlingTest : StringSpec({
     "count 2nd try" {
         score("0", "1") shouldBe 1
     }
+    "count many tries" {
+        score(*20 times "1") shouldBe 20
+    }
 })
+
+private infix fun Int.times(item: String): Array<out String> = Array(this) { item }
